@@ -9,7 +9,7 @@ class RingingScreen extends StatelessWidget {
     Key? key,
     required this.onStop,
     required this.onSnooze,
-    this.snoozeMinutes = 5,
+    this.snoozeMinutes = 5, //Added default time for snooze
   }) : super(key: key);
 
   @override

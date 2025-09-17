@@ -83,6 +83,7 @@ class _AddEditAlarmScreenState extends State<AddEditAlarmScreen> {
       context.read<AlarmBloc>().add(AddAlarm(alarm));
     } else {
       context.read<AlarmBloc>().add(UpdateAlarm(alarm));
+      context.read<AlarmBloc>().add(LoadAlarms());
     }
     // Set alarm using alarm package
     final alarmSettings = AlarmSettings(
