@@ -10,6 +10,7 @@ import 'bloc/alarm_event.dart';
 import 'screens/ringing_screen.dart';
 import 'screens/splash_screen.dart';
 import 'service_locator.dart';
+import 'utils/alarm_utils.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 bool _isRingingScreenVisible = false;
@@ -80,11 +81,12 @@ class MyApp extends StatelessWidget {
                 navigatorKey.currentState?.pop();
                 _isRingingScreenVisible = false;
                 await Alarm.stop(alarm.id);
-                await Alarm.set(
-                  alarmSettings: alarm.copyWith(
-                    dateTime: DateTime.now().add(Duration(minutes: 1)),
-                  ),
+                final snoozed = buildSnoozedSettings(
+                  current: alarm,
+                  snoozeMinutes: 1,
+                  now: DateTime.now(),
                 );
+                await Alarm.set(alarmSettings: snoozed);
               },
             ),
           ),
