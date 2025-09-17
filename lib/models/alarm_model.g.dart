@@ -2,10 +2,6 @@
 
 part of 'alarm_model.dart';
 
-// **************************************************************************
-// TypeAdapterGenerator
-// **************************************************************************
-
 class AlarmModelAdapter extends TypeAdapter<AlarmModel> {
   @override
   final int typeId = 0;

@@ -12,6 +12,7 @@ import 'screens/splash_screen.dart';
 import 'service_locator.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+bool _isRingingScreenVisible = false;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -29,6 +30,13 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Close RingingScreen if an alarm is stopped from notification/background
+    Alarm.updateStream.stream.listen((_) {
+      if (_isRingingScreenVisible) {
+        navigatorKey.currentState?.maybePop();
+        _isRingingScreenVisible = false;
+      }
+    });
     // Listen for alarm ringing and show RingingScreen
     Alarm.ringing.listen((settings) async {
       for (final alarm in settings.alarms) {
@@ -48,6 +56,7 @@ class MyApp extends StatelessWidget {
               label: label,
               onStop: () async {
                 navigatorKey.currentState?.pop();
+                _isRingingScreenVisible = false;
                 await Alarm.stop(alarm.id);
                 // Auto-disable "Once" alarms after ringing
                 final box = Hive.box<AlarmModel>('alarms');
@@ -60,15 +69,16 @@ class MyApp extends StatelessWidget {
                   await alarmModel.save();
                   // Dispatch BLoC events to update UI
                   navigatorKey.currentState?.context.read<AlarmBloc>().add(
-                    UpdateAlarm(alarmModel),
-                  );
+                        UpdateAlarm(alarmModel),
+                      );
                   navigatorKey.currentState?.context.read<AlarmBloc>().add(
-                    LoadAlarms(),
-                  );
+                        LoadAlarms(),
+                      );
                 }
               },
               onSnooze: () async {
                 navigatorKey.currentState?.pop();
+                _isRingingScreenVisible = false;
                 await Alarm.stop(alarm.id);
                 await Alarm.set(
                   alarmSettings: alarm.copyWith(
@@ -79,6 +89,7 @@ class MyApp extends StatelessWidget {
             ),
           ),
         );
+        _isRingingScreenVisible = true;
       }
     });
     return BlocProvider(
