@@ -36,6 +36,22 @@ class AlarmBloc extends Bloc<AlarmEvent, AlarmState> {
       final alarms = repository.getAlarms();
       final alarm = alarms.firstWhere((a) => a.id == event.id);
       alarm.isActive = event.isActive;
+      // UX improvement: If re-enabling a 'Once' alarm and its time is in the past, set to next day
+      if (event.isActive &&
+          alarm.repeatDays.isEmpty &&
+          alarm.customIntervalDays == 0 &&
+          alarm.customIntervalHours == 0 &&
+          alarm.time.isBefore(DateTime.now())) {
+        alarm.time = DateTime.now()
+            .add(Duration(days: 1))
+            .copyWith(
+              hour: alarm.time.hour,
+              minute: alarm.time.minute,
+              second: 0,
+              millisecond: 0,
+              microsecond: 0,
+            );
+      }
       await repository.updateAlarm(alarm);
       add(LoadAlarms());
     });

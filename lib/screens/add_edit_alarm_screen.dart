@@ -89,8 +89,10 @@ class _AddEditAlarmScreenState extends State<AddEditAlarmScreen> {
     final alarmSettings = AlarmSettings(
       id: alarm.id,
       dateTime: alarm.time,
-      assetAudioPath: alarm.ringtonePath,
-      loopAudio: true,
+      assetAudioPath: _ringtonePath?.isNotEmpty == true
+          ? _ringtonePath!
+          : 'assets/better-day.mp3', //Fallback to default if none selected
+      loopAudio: _ringtonePath?.isNotEmpty == true,
       vibrate: true,
       warningNotificationOnKill: true,
       androidFullScreenIntent: true,
