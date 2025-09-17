@@ -38,6 +38,12 @@ class _AlarmDashboardScreenState extends State<AlarmDashboardScreen> {
 
   DateTime _nextOccurrence(alarm) {
     final now = DateTime.now();
+    // For once alarms, use the actual scheduled time directly so only that card updates
+    if (alarm.repeatDays.isEmpty &&
+        alarm.customIntervalDays == 0 &&
+        alarm.customIntervalHours == 0) {
+      return alarm.time;
+    }
     DateTime base = DateTime(
       now.year,
       now.month,
@@ -80,7 +86,7 @@ class _AlarmDashboardScreenState extends State<AlarmDashboardScreen> {
       return base.add(Duration(days: (first - todayIndex + 7) % 7 + 7));
     }
 
-    // Once
+    // This should not be reached for once alarms due to early return above
     if (base.isAfter(now)) return base;
     return base.add(const Duration(days: 1));
   }
@@ -319,8 +325,7 @@ class _AlarmDashboardScreenState extends State<AlarmDashboardScreen> {
                 itemBuilder: (context, index) {
                   final alarm = alarms[index];
                   final next = _nextOccurrence(alarm);
-                  final bool isOnce =
-                      alarm.repeatDays.isEmpty &&
+                  final bool isOnce = alarm.repeatDays.isEmpty &&
                       alarm.customIntervalDays == 0 &&
                       alarm.customIntervalHours == 0;
                   final bool disableToggle =
@@ -416,13 +421,20 @@ class _AlarmDashboardScreenState extends State<AlarmDashboardScreen> {
                               children: [
                                 Switch(
                                   value: alarm.isActive,
-                                  onChanged: disableToggle
-                                      ? null
-                                      : (val) {
-                                          context.read<AlarmBloc>().add(
-                                            ToggleAlarm(alarm.id, val),
-                                          );
-                                        },
+                                  onChanged: (val) {
+                                    // If expired once alarm, ignore attempts to disable but allow enabling
+                                    final isOnce = alarm.repeatDays.isEmpty &&
+                                        alarm.customIntervalDays == 0 &&
+                                        alarm.customIntervalHours == 0;
+                                    final isExpired = isOnce &&
+                                        alarm.time.isBefore(DateTime.now());
+                                    if (isExpired && !val) {
+                                      return;
+                                    }
+                                    context.read<AlarmBloc>().add(
+                                          ToggleAlarm(alarm.id, val),
+                                        );
+                                  },
                                 ),
                                 IconButton(
                                   tooltip: 'Edit',

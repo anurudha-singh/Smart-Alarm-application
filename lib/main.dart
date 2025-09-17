@@ -31,6 +31,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    const int snoozeMinutes = 5; // unified snooze duration
     // Close RingingScreen if an alarm is stopped from notification/background
     Alarm.updateStream.stream.listen((_) {
       if (_isRingingScreenVisible) {
@@ -53,7 +54,7 @@ class MyApp extends StatelessWidget {
         navigatorKey.currentState?.push(
           MaterialPageRoute(
             builder: (context) => RingingScreen(
-              snoozeMinutes: 5, // TODO:: Remove post testing set default to 5
+              snoozeMinutes: snoozeMinutes,
               label: label,
               onStop: () async {
                 navigatorKey.currentState?.pop();
@@ -70,11 +71,11 @@ class MyApp extends StatelessWidget {
                   await alarmModel.save();
                   // Dispatch BLoC events to update UI
                   navigatorKey.currentState?.context.read<AlarmBloc>().add(
-                    UpdateAlarm(alarmModel),
-                  );
+                        UpdateAlarm(alarmModel),
+                      );
                   navigatorKey.currentState?.context.read<AlarmBloc>().add(
-                    LoadAlarms(),
-                  );
+                        LoadAlarms(),
+                      );
                 }
               },
               onSnooze: () async {
@@ -83,7 +84,7 @@ class MyApp extends StatelessWidget {
                 await Alarm.stop(alarm.id);
                 final snoozed = buildSnoozedSettings(
                   current: alarm,
-                  snoozeMinutes: 1,
+                  snoozeMinutes: snoozeMinutes,
                   now: DateTime.now(),
                 );
                 await Alarm.set(alarmSettings: snoozed);
