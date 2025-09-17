@@ -53,7 +53,7 @@ class MyApp extends StatelessWidget {
         navigatorKey.currentState?.push(
           MaterialPageRoute(
             builder: (context) => RingingScreen(
-              snoozeMinutes: 1, // TODO:: Remove post testing
+              snoozeMinutes: 5, // TODO:: Remove post testing set default to 5
               label: label,
               onStop: () async {
                 navigatorKey.currentState?.pop();
@@ -70,11 +70,11 @@ class MyApp extends StatelessWidget {
                   await alarmModel.save();
                   // Dispatch BLoC events to update UI
                   navigatorKey.currentState?.context.read<AlarmBloc>().add(
-                        UpdateAlarm(alarmModel),
-                      );
+                    UpdateAlarm(alarmModel),
+                  );
                   navigatorKey.currentState?.context.read<AlarmBloc>().add(
-                        LoadAlarms(),
-                      );
+                    LoadAlarms(),
+                  );
                 }
               },
               onSnooze: () async {

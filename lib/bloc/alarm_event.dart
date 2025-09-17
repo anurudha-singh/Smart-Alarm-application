@@ -8,6 +8,8 @@ abstract class AlarmEvent extends Equatable {
 
 class LoadAlarms extends AlarmEvent {}
 
+class RefreshAlarms extends AlarmEvent {}
+
 class AddAlarm extends AlarmEvent {
   final AlarmModel alarm;
   AddAlarm(this.alarm);

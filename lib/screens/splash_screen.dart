@@ -37,9 +37,10 @@ class _SplashOrHomeState extends State<SplashOrHome> {
               ),
               const SizedBox(height: 32),
               const Text(
-                'Welcome to Smart Alarm',
+                'Welcome to Smart Alarm App',
                 style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
               ),
+
               const SizedBox(height: 16),
               const Text(
                 'by Anurudha Singh',

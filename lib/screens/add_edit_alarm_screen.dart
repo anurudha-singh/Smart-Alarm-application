@@ -117,7 +117,16 @@ class _AddEditAlarmScreenState extends State<AddEditAlarmScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.alarm == null ? 'Add Alarm' : 'Edit Alarm'),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          color: Colors.white,
+          onPressed: () => Navigator.pop(context),
+        ),
+        backgroundColor: Colors.deepPurple,
+        title: Text(
+          widget.alarm == null ? 'Add Alarm' : 'Edit Alarm',
+          style: TextStyle(color: Colors.white),
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
