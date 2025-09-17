@@ -7,7 +7,6 @@ import 'models/alarm_model.dart';
 import 'repository/alarm_repository.dart';
 import 'bloc/alarm_bloc.dart';
 import 'bloc/alarm_event.dart';
-import 'screens/alarm_dashboard_screen.dart';
 import 'screens/ringing_screen.dart';
 import 'screens/splash_screen.dart';
 import 'service_locator.dart';
@@ -33,9 +32,20 @@ class MyApp extends StatelessWidget {
     // Listen for alarm ringing and show RingingScreen
     Alarm.ringing.listen((settings) async {
       for (final alarm in settings.alarms) {
+        // Try to fetch label from Hive using the same id
+        String label = '';
+        try {
+          final box = Hive.box<AlarmModel>('alarms');
+          final model = box.get(alarm.id);
+          if (model != null) {
+            label = model.label;
+          }
+        } catch (_) {}
         navigatorKey.currentState?.push(
           MaterialPageRoute(
             builder: (context) => RingingScreen(
+              snoozeMinutes: 1, // TODO:: Remove post testing
+              label: label,
               onStop: () async {
                 navigatorKey.currentState?.pop();
                 await Alarm.stop(alarm.id);
