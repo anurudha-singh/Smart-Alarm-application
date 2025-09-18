@@ -23,6 +23,7 @@ class _AlarmDashboardScreenState extends State<AlarmDashboardScreen> {
   _AlarmSort _sort = _AlarmSort.timeAsc;
 
   String _repeatInfo(alarm) {
+    // Creating a string which will appear inside the chip of the alarm list
     if (alarm.repeatDays.length == 7) {
       return 'Daily';
     } else if (alarm.customIntervalDays > 0) {
@@ -72,8 +73,8 @@ class _AlarmDashboardScreenState extends State<AlarmDashboardScreen> {
 
     // Weekly repeat days
     if (alarm.repeatDays.isNotEmpty) {
-      // 0=Mon ... 6=Sun as per model
-      int todayIndex = (now.weekday - 1) % 7; // DateTime.weekday: Mon=1..Sun=7
+      // 0=Mon ... 6=Sun based on model
+      int todayIndex = (now.weekday - 1) % 7;
       for (int i = 0; i < 7; i++) {
         int idx = (todayIndex + i) % 7;
         if (alarm.repeatDays.contains(idx)) {
@@ -81,7 +82,7 @@ class _AlarmDashboardScreenState extends State<AlarmDashboardScreen> {
           if (candidate.isAfter(now)) return candidate;
         }
       }
-      // fallback next week same earliest day
+      // If none found, return the first occurrence in the next week
       int first = alarm.repeatDays.first;
       return base.add(Duration(days: (first - todayIndex + 7) % 7 + 7));
     }
@@ -326,7 +327,8 @@ class _AlarmDashboardScreenState extends State<AlarmDashboardScreen> {
                 itemBuilder: (context, index) {
                   final alarm = alarms[index];
                   final next = _nextOccurrence(alarm);
-                  final bool isOnce = alarm.repeatDays.isEmpty &&
+                  final bool isOnce =
+                      alarm.repeatDays.isEmpty &&
                       alarm.customIntervalDays == 0 &&
                       alarm.customIntervalHours == 0;
                   final bool isExpired =
@@ -386,7 +388,10 @@ class _AlarmDashboardScreenState extends State<AlarmDashboardScreen> {
                                     Chip(
                                       label: Text(
                                         _repeatInfo(alarm),
-                                        style: const TextStyle(fontSize: 12),
+                                        style: const TextStyle(
+                                          fontSize: 12,
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
                                       ),
                                       visualDensity: VisualDensity.compact,
                                     ),
@@ -427,8 +432,8 @@ class _AlarmDashboardScreenState extends State<AlarmDashboardScreen> {
                                       ? null
                                       : (val) {
                                           context.read<AlarmBloc>().add(
-                                                ToggleAlarm(alarm.id, val),
-                                              );
+                                            ToggleAlarm(alarm.id, val),
+                                          );
                                         },
                                 ),
                                 IconButton(

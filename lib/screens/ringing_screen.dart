@@ -33,23 +33,20 @@ class RingingScreen extends StatelessWidget {
               Text(
                 label,
                 textAlign: TextAlign.center,
-                style: const TextStyle(
-                  fontSize: 20,
-                  color: Colors.white70,
-                ),
+                style: const TextStyle(fontSize: 20, color: Colors.white70),
               ),
             ],
             const SizedBox(height: 32),
             ElevatedButton(
               onPressed: onStop,
-              child: const Text('Stop'),
               style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
+              child: const Text('Stop'),
             ),
             const SizedBox(height: 16),
             ElevatedButton(
               onPressed: onSnooze,
-              child: Text('Snooze ($snoozeMinutes min)'),
               style: ElevatedButton.styleFrom(backgroundColor: Colors.orange),
+              child: Text('Snooze ($snoozeMinutes min)'),
             ),
           ],
         ),

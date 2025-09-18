@@ -65,6 +65,7 @@ class _AddEditAlarmScreenState extends State<AddEditAlarmScreen> {
     );
 
     // If the selected time has already passed today, schedule for tomorrow
+    //This one is a general standard flow
     if (alarmTime.isBefore(now)) {
       alarmTime = alarmTime.add(const Duration(days: 1));
     }
@@ -73,7 +74,8 @@ class _AddEditAlarmScreenState extends State<AddEditAlarmScreen> {
       if (_selectedDays[i]) repeatDays.add(i);
     }
     final alarm = AlarmModel(
-      id: widget.alarm?.id ??
+      id:
+          widget.alarm?.id ??
           DateTime.now().millisecondsSinceEpoch % 2147483647,
       time: alarmTime,
       label: _labelController.text,
@@ -156,6 +158,10 @@ class _AddEditAlarmScreenState extends State<AddEditAlarmScreen> {
             const SizedBox(height: 16),
             Text('Repeat Days:'),
             ToggleButtons(
+              isSelected: _selectedDays,
+              onPressed: (int index) {
+                setState(() => _selectedDays[index] = !_selectedDays[index]);
+              },
               children: const [
                 Text('Mon'),
                 Text('Tue'),
@@ -165,10 +171,6 @@ class _AddEditAlarmScreenState extends State<AddEditAlarmScreen> {
                 Text('Sat'),
                 Text('Sun'),
               ],
-              isSelected: _selectedDays,
-              onPressed: (int index) {
-                setState(() => _selectedDays[index] = !_selectedDays[index]);
-              },
             ),
             const SizedBox(height: 16),
             Row(

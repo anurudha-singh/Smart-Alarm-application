@@ -22,7 +22,6 @@ class AlarmRepository {
   }
 
   Future<void> updateAlarm(AlarmModel alarm) async {
-    // Ensure updates work even when a detached instance is provided
     await _box.put(alarm.id, alarm);
   }
 
