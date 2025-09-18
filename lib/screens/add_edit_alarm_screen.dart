@@ -56,20 +56,24 @@ class _AddEditAlarmScreenState extends State<AddEditAlarmScreen> {
 
   void _saveAlarm() async {
     final now = DateTime.now();
-    final alarmTime = DateTime(
+    DateTime alarmTime = DateTime(
       now.year,
       now.month,
       now.day,
       _selectedTime.hour,
       _selectedTime.minute,
     );
+
+    // If the selected time has already passed today, schedule for tomorrow
+    if (alarmTime.isBefore(now)) {
+      alarmTime = alarmTime.add(const Duration(days: 1));
+    }
     final repeatDays = <int>[];
     for (int i = 0; i < 7; i++) {
       if (_selectedDays[i]) repeatDays.add(i);
     }
     final alarm = AlarmModel(
-      id:
-          widget.alarm?.id ??
+      id: widget.alarm?.id ??
           DateTime.now().millisecondsSinceEpoch % 2147483647,
       time: alarmTime,
       label: _labelController.text,

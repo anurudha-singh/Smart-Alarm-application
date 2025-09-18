@@ -94,7 +94,8 @@ class _AlarmDashboardScreenState extends State<AlarmDashboardScreen> {
   String _humanNextIn(DateTime dt) {
     final now = DateTime.now();
     final diff = dt.difference(now);
-    if (diff.inMinutes < 1) return 'Ringing now';
+    if (diff.inSeconds <= 0) return 'Ringing now';
+    if (diff.inMinutes < 1) return 'In ${diff.inSeconds} sec';
     if (diff.inMinutes < 60) return 'In ${diff.inMinutes} min';
     if (diff.inHours < 24) return 'In ${diff.inHours} hr';
     final days = diff.inDays;

@@ -33,8 +33,11 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     const int snoozeMinutes = 5; // unified snooze duration
     // Close RingingScreen if an alarm is stopped from notification/background
-    Alarm.updateStream.stream.listen((_) {
+    Alarm.updateStream.stream.listen((update) {
+      // Check if any alarm was stopped (not just updated)
       if (_isRingingScreenVisible) {
+        // Pop the ringing screen when any alarm update occurs
+        // This covers both stop and snooze actions from notifications
         navigatorKey.currentState?.maybePop();
         _isRingingScreenVisible = false;
       }
@@ -42,6 +45,9 @@ class MyApp extends StatelessWidget {
     // Listen for alarm ringing and show RingingScreen
     Alarm.ringing.listen((settings) async {
       for (final alarm in settings.alarms) {
+        // Check if ringing screen is already visible to avoid duplicates
+        if (_isRingingScreenVisible) return;
+
         // Try to fetch label from Hive using the same id
         String label = '';
         try {
@@ -51,6 +57,8 @@ class MyApp extends StatelessWidget {
             label = model.label;
           }
         } catch (_) {}
+
+        _isRingingScreenVisible = true;
         navigatorKey.currentState?.push(
           MaterialPageRoute(
             builder: (context) => RingingScreen(
@@ -92,7 +100,6 @@ class MyApp extends StatelessWidget {
             ),
           ),
         );
-        _isRingingScreenVisible = true;
       }
     });
     return BlocProvider(
