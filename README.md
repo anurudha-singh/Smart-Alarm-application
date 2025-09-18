@@ -11,7 +11,7 @@ A production-ready Flutter alarm application built with **Hive persistence**, **
   - Every Y days
 - Custom ringtone selection (file picker) with default asset fallback
 - Full-screen **Ringing UI** with Stop and Snooze options
-- Configurable snooze duration (default: 5 minutes)
+- snooze duration (default: 5 minutes)
 - Notification Stop integration (auto-dismiss ringing screen)
 - Dashboard with:
   - Search, filter, sort
@@ -35,6 +35,10 @@ A production-ready Flutter alarm application built with **Hive persistence**, **
 - **Foreground**: Alarms work correctly with full ringing screen (Stop/Snooze).  
 - **Background**: Currently limited to vibration only. The ringing screen appears once the app is reopened.  
 - **Terminated (Killed State)**: Behavior still under verification. Requires IPA build testing.  
+
+**Snooze configuration**
+Due to time constraint was not able to include this feature hence by default selected to 5min as per general standard value.
+
 
 ## Snooze test case is included.
 
