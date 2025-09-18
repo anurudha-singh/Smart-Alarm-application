@@ -42,6 +42,19 @@ Due to time constraint was not able to include this feature hence by default sel
 
 ## Snooze test case is included.
 
+**App Screenshots:-**
+<img width="720" height="1600" alt="Screenshot_20250917_214004" src="https://github.com/user-attachments/assets/17b16dd5-c00e-4a91-9818-74441e9c6ba7" />
+<img width="720" height="1600" alt="Screenshot_20250917_214032" src="https://github.com/user-attachments/assets/511c35f8-b15c-4588-bee0-2d714326c68f" />
+<img width="720" height="1600" alt="Screenshot_20250917_214047" src="https://github.com/user-attachments/assets/d8f4fdb5-7571-43c6-b28b-65615031d6ba" />
+<img width="720" height="1600" alt="Screenshot_20250917_214103" src="https://github.com/user-attachments/assets/0820dc53-1bef-4877-b299-ddd0248e797d" />
+<img width="720" height="1600" alt="Screenshot_20250917_214116" src="https://github.com/user-attachments/assets/c713dbaa-afb9-49c9-b1d2-07695e1481e4" />
+<img width="720" height="1600" alt="Screenshot_20250917_214126" src="https://github.com/user-attachments/assets/95d01b9b-d857-4ee4-9578-36b0e13daa3d" />
+<img width="720" height="1600" alt="Screenshot_20250917_214205" src="https://github.com/user-attachments/assets/4228e231-f285-46da-b8b2-3f2f50b980fd" />
+
+
+
+
+
 
 
 
