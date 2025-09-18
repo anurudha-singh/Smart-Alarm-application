@@ -10,6 +10,14 @@ class LoadAlarms extends AlarmEvent {}
 
 class RefreshAlarms extends AlarmEvent {}
 
+class SyncAlarmState extends AlarmEvent {
+  final int alarmId;
+  final bool isActive;
+  SyncAlarmState(this.alarmId, this.isActive);
+  @override
+  List<Object?> get props => [alarmId, isActive];
+}
+
 class AddAlarm extends AlarmEvent {
   final AlarmModel alarm;
   AddAlarm(this.alarm);

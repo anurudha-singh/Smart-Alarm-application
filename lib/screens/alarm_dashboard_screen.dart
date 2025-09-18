@@ -329,8 +329,9 @@ class _AlarmDashboardScreenState extends State<AlarmDashboardScreen> {
                   final bool isOnce = alarm.repeatDays.isEmpty &&
                       alarm.customIntervalDays == 0 &&
                       alarm.customIntervalHours == 0;
-                  final bool disableToggle =
+                  final bool isExpired =
                       isOnce && alarm.time.isBefore(DateTime.now());
+                  final bool disableToggle = isExpired && !alarm.isActive;
                   return Dismissible(
                     key: Key(alarm.id.toString()),
                     direction: DismissDirection.endToStart,
@@ -422,20 +423,13 @@ class _AlarmDashboardScreenState extends State<AlarmDashboardScreen> {
                               children: [
                                 Switch(
                                   value: alarm.isActive,
-                                  onChanged: (val) {
-                                    // If expired once alarm, ignore attempts to disable but allow enabling
-                                    final isOnce = alarm.repeatDays.isEmpty &&
-                                        alarm.customIntervalDays == 0 &&
-                                        alarm.customIntervalHours == 0;
-                                    final isExpired = isOnce &&
-                                        alarm.time.isBefore(DateTime.now());
-                                    if (isExpired && !val) {
-                                      return;
-                                    }
-                                    context.read<AlarmBloc>().add(
-                                          ToggleAlarm(alarm.id, val),
-                                        );
-                                  },
+                                  onChanged: disableToggle
+                                      ? null
+                                      : (val) {
+                                          context.read<AlarmBloc>().add(
+                                                ToggleAlarm(alarm.id, val),
+                                              );
+                                        },
                                 ),
                                 IconButton(
                                   tooltip: 'Edit',

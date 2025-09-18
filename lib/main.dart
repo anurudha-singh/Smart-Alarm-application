@@ -23,6 +23,10 @@ void main() async {
   await Alarm.init();
   await Permission.notification.request();
   setupLocator();
+
+  // Reset ringing screen visibility on app startup
+  _isRingingScreenVisible = false;
+
   runApp(MyApp());
 }
 
@@ -47,6 +51,30 @@ class MyApp extends StatelessWidget {
       for (final alarm in settings.alarms) {
         // Check if ringing screen is already visible to avoid duplicates
         if (_isRingingScreenVisible) return;
+
+        // Add a small delay to allow the system to process any stop operations
+        await Future.delayed(const Duration(milliseconds: 200));
+
+        // Double-check if alarm is still active after the delay
+        try {
+          final box = Hive.box<AlarmModel>('alarms');
+          final model = box.get(alarm.id);
+          if (model == null || !model.isActive) {
+            // Alarm was stopped or doesn't exist, don't show ringing screen
+            return;
+          }
+
+          // Additional check: verify the alarm time hasn't passed too long ago
+          // If the alarm was supposed to ring more than 1 minute ago, it's likely been stopped
+          final timeSinceAlarm = DateTime.now().difference(alarm.dateTime);
+          if (timeSinceAlarm.inMinutes > 1) {
+            // Alarm is too old, likely been stopped, don't show ringing screen
+            return;
+          }
+        } catch (_) {
+          // If we can't check the alarm state, don't show ringing screen
+          return;
+        }
 
         // Try to fetch label from Hive using the same id
         String label = '';

@@ -29,6 +29,18 @@ class AlarmBloc extends Bloc<AlarmEvent, AlarmState> {
       }
     });
 
+    on<SyncAlarmState>((event, emit) async {
+      try {
+        final alarms = repository.getAlarms();
+        final alarm = alarms.firstWhere((a) => a.id == event.alarmId);
+        alarm.isActive = event.isActive;
+        await repository.updateAlarm(alarm);
+        add(LoadAlarms());
+      } catch (e) {
+        emit(AlarmError(e.toString()));
+      }
+    });
+
     on<AddAlarm>((event, emit) async {
       await repository.addAlarm(event.alarm);
       add(LoadAlarms());
